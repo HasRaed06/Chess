@@ -1,6 +1,7 @@
 #evaluates all the possible moves of a piece (position of the piece)
 def moves(self, board, piece_pos):
     #promotion
+    #valid moves(after checks)
     possible_moves = []
     row, col = piece_pos
     if board[row][col] == "":
