@@ -113,15 +113,44 @@ def moves(self, board, piece_pos):
                             possible_moves.append((row,col+2))
     else:
         att = checks.attackers(self,board,color)
-        if len(att)>=0:
-            if type == 'king':
+        if len(att) == 1:
+            #blocks
+            if type != 'knight':
+                pass
+
+            #captures
+            row_opp, col_opp = att[0]
+            if type != "pawn":
                 for dir in direction:
                     rr,cc = dir
-                    r = row + rr
-                    c = col + cc
-                    print(r,c)
-                    if 0<=r<8 and 0<=c<8 and (board[r][c]['type'] == "" or board[r][c]['color'] != color) and self.check(self.result(board,(row,col),(r,c)),color) == False:
-                        possible_moves.append((r,c))
+                    i = 1
+                    r = row + rr*i
+                    c = col + cc*i
+                    if type == "queen" or type == "rook" or type == "bishop":
+                        while (0<=r<8 and 0<=c<8 and board[r][c]['type'] == ""):
+                            i += 1
+                            r = row + rr*i
+                            c = col + cc*i
+                        if row_opp == r and col_opp == c:
+                            possible_moves.append((r,c))
+                            break
+                    elif type == "knight":
+                        if row_opp == r and col_opp == c:
+                            possible_moves.append((r,c))
+            else:
+                coff = 1 if color == "black" else -1
+                if row_opp == row+coff and (col_opp == col+1 or col_opp == col-1):
+                    possible_moves.append((row_opp,col_opp))
+
+        #king moves    
+        if type == 'king':
+            for dir in direction:
+                rr,cc = dir
+                r = row + rr
+                c = col + cc
+                print(r,c)
+                if 0<=r<8 and 0<=c<8 and (board[r][c]['type'] == "" or board[r][c]['color'] != color) and self.check(self.result(board,(row,col),(r,c)),color) == False:
+                    possible_moves.append((r,c))
             
     valid_moves = []
     print(possible_moves)
