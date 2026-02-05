@@ -12,8 +12,6 @@ def check(self,board,color):
             break
     #check for the pawn
     coff = 1 if color == "black" else -1
-    print(row-coff)
-    print(col+1)
     if 0<=row+coff<8:
         if 0<=col+1<8:
             piece1 = board[row+coff][col+1]
@@ -85,4 +83,3 @@ def check(self,board,color):
             if piece['type'] == 'knight' and piece['color'] != color:
                 return True
     return False
-

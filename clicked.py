@@ -9,11 +9,9 @@ def square_clicked(self):
     row, col = btn.property("board_pos")
     board = self.main_board
     turn = self.turn()
-    print(turn)
     if self.highlighted():
         if btn.property("square_color") == "gray":
             self.dehighlight()
-            print('hello')
             if board[row][col]['type'] != "" and turn == board[row][col]['color']:
                 self.highlight(row,col)
         else:
@@ -83,11 +81,4 @@ def square_clicked(self):
         if board[row][col]['type'] != "" and turn == board[row][col]['color']:
             self.highlight(row,col)
     self.prv_btn = btn
-    self.print()
-    if turn == "black":
-        turn = "white"
-    else:
-        turn = "black"
-    if self.check(board,turn):
-        print('checked')
 
