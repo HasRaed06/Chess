@@ -8,10 +8,13 @@ def square_clicked(self):
     btn = self.sender()
     row, col = btn.property("board_pos")
     board = self.main_board
+    turn = self.turn()
+    print(turn)
     if self.highlighted():
         if btn.property("square_color") == "gray":
             self.dehighlight()
-            if board[row][col]['type'] != "" and self.turn() == board[row][col]['color']:
+            print('hello')
+            if board[row][col]['type'] != "" and turn == board[row][col]['color']:
                 self.highlight(row,col)
         else:
             name = self.prv_btn.property("piece")
@@ -77,7 +80,14 @@ def square_clicked(self):
                 btn.setIconSize(QSize(86, 86))
             self.last_move = (self.prv_btn,btn)
     else:
-        if board[row][col]['type'] != "" and self.turn() == board[row][col]['color']:
+        if board[row][col]['type'] != "" and turn == board[row][col]['color']:
             self.highlight(row,col)
     self.prv_btn = btn
+    self.print()
+    if turn == "black":
+        turn = "white"
+    else:
+        turn = "black"
+    if self.check(board,turn):
+        print('checked')
 
