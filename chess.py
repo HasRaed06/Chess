@@ -141,14 +141,14 @@ class ChessWindow(QMainWindow):
 
 
 ini_board = [
-    ["brq", "bnq", "bbq", "bk", "bq", "bbk", "bnk", "brk"],
-    ["bpa", "bpb", "bpc", "bpd", "bbk", "bpf", "bpg", "bph"],
-    ["", "", "", "", "", "", "", ""],
-    ["bq", "", "", "", "", "", "", ""],
+    ["brq", "bnq", "bbq", "bq", "bk", "bbk", "bnk", "brk"],
+    ["bpa", "bpb", "bpc", "bpd", "bpe", "bpf", "bpg", "bph"],
     ["", "", "", "", "", "", "", ""],
     ["", "", "", "", "", "", "", ""],
-    ["wpa", "wpb", "wpc", "", "", "", "", "wph"],
-    ["wrq", "wnq", "wbq", "wq", "wk", "", "", "wrk"]
+    ["", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", ""],
+    ["wpa", "wpb", "wpc", "wpd", "wpe", "wpf", "wpg", "wph"],
+    ["wrq", "wnq", "wbq", "wq", "wk", "wbk", "wnk", "wrk"]
 ]
 
 
