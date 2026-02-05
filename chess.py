@@ -7,7 +7,7 @@ from PyQt6.QtCore import QSize
 import calc_moves
 import clicked
 import checks
-
+import copy
 
 class ChessWindow(QMainWindow):
     def __init__(self,board):
@@ -69,6 +69,16 @@ class ChessWindow(QMainWindow):
     #translate a piece postion in the board into chess code
     def to_chess(self, row, col):
         return f"{chr(ord('a') + col)}{8 - row}"
+    
+    #the result of a move
+    def result(self, board, prv_mov, ini_mov):
+        new_board = copy.deepcopy(board)
+        r, c = prv_mov
+        row, col = ini_mov
+        new_board[row][col] = new_board[r][c]
+        new_board[r][c] = {'type': '', 'color': '', 'image': ''}
+        return new_board
+
 
     #checks if theres highlited square(you selected a piece)
     def highlighted(self):
@@ -93,14 +103,14 @@ class ChessWindow(QMainWindow):
             btn.setProperty("square_color",square)
             btn.setStyleSheet(f"background-color: {square};")
     
-    def print(self):
+    def print(self, board):
         for i in range(8):
             ch = ''
             for j in range(8):
-                if self.main_board[i][j]["type"] == "":
+                if board[i][j]["type"] == "":
                     c = '    '
                 else:
-                    c = self.main_board[i][j]["type"][:4]
+                    c = board[i][j]["type"][:4]
                 ch = ch + " " + c + " |"
             print(ch)
 
@@ -132,13 +142,13 @@ class ChessWindow(QMainWindow):
 
 ini_board = [
     ["brq", "bnq", "bbq", "bq", "bk", "bbk", "bnk", "brk"],
-    ["bpa", "bpb", "bpc", "bpd", "bpe", "bpf", "bpg", "bph"],
+    ["bpa", "bpb", "bpc", "", "bpe", "bpf", "bpg", "bph"],
     ["", "", "", "", "", "", "", ""],
     ["", "", "", "", "", "", "", ""],
     ["", "", "", "", "", "", "", ""],
     ["", "", "", "", "", "", "", ""],
-    ["wpa", "wpb", "wpc", "wpd", "wpe", "wpf", "wpg", "wph"],
-    ["wrq", "wnq", "wbq", "wq", "wk", "wbk", "wnk", "wrk"]
+    ["wpa", "wpb", "wpc", "wpd", "", "", "", "wph"],
+    ["wrq", "wnq", "wbq", "wq", "wk", "", "", "wrk"]
 ]
 
 

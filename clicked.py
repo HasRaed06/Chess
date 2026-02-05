@@ -61,6 +61,9 @@ def square_clicked(self):
                     btn2.setIcon(QIcon(image))
                     btn2.setIconSize(QSize(86, 86))
                     btn3.setIcon(QIcon(""))
+                    btn2.setProperty("piece",btn3.property("piece"))
+                    btn3.setProperty("piece", "")
+
                 elif col - c == -2:
                     btn2 = self.findChild(QPushButton, "b"+str(row)+str(col+1))
                     btn3 = self.findChild(QPushButton, "b"+str(row)+str(col-2))
@@ -70,8 +73,8 @@ def square_clicked(self):
                     btn2.setIcon(QIcon(image))
                     btn2.setIconSize(QSize(86, 86))
                     btn3.setIcon(QIcon(""))
-                btn2.setProperty("piece",btn3.property("piece"))
-                btn3.setProperty("piece", "")
+                    btn2.setProperty("piece",btn3.property("piece"))
+                    btn3.setProperty("piece", "")
 
             if board[row][col]['type'] == 'pawn' and abs(row-r) == 2:
                 btn.setProperty("enpassant", True)
@@ -92,7 +95,6 @@ def square_clicked(self):
         if board[row][col]['type'] != "" and turn == board[row][col]['color']:
             self.highlight(row,col)
     self.prv_btn = btn
-    print()
 
 def test(self):
     for i in range(8):
