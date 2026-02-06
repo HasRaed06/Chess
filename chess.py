@@ -12,6 +12,12 @@ import copy
 class ChessWindow(QMainWindow):
     def __init__(self,board):
         super().__init__()
+        self.initialize(board)
+        loadUi("chess.ui", self)
+        self.reset.clicked.connect(self.reset_game)
+        self.display(board)
+    
+    def initialize(self,board):
         self.prv_btn = None
         self.last_move = None
         self.wking_moved = False
@@ -47,7 +53,9 @@ class ChessWindow(QMainWindow):
             new_board.append(new_line)
         
         self.main_board = new_board
-        loadUi("chess.ui", self)
+
+
+    def display(self,board):
         #displaying the board in the UI
         for row in range(8):
             for col in range(8):
@@ -65,6 +73,11 @@ class ChessWindow(QMainWindow):
                 square = self.theme[0] if (row+col)%2 == 0 else self.theme[1]
                 btn.setProperty("square_color", square)
                 btn.setStyleSheet(f"background-color: {square};")
+ 
+                
+    def reset_game(self):
+        self.initialize(ini_board)
+        self.display(ini_board)
 
     #translate a piece postion in the board into chess code
     def to_chess(self, row, col):
@@ -156,14 +169,10 @@ ini_board = [
     ["wrq", "wnq", "wbq", "wq", "wk", "wbk", "wnk", "wrk"]
 ]
 
-def reset():
-    window = ChessWindow(ini_board)
-
 def main():
     app = QApplication(sys.argv)
     window = ChessWindow(ini_board)
     window.show()
-    window.reset.clicked.connect(reset)
     sys.exit(app.exec())
 
 
