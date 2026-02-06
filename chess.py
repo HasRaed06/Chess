@@ -78,7 +78,6 @@ class ChessWindow(QMainWindow):
     def reset_game(self):
         self.initialize(ini_board)
         self.display(ini_board)
-        self.print(self.main_board)
 
     #translate a piece postion in the board into chess code
     def to_chess(self, row, col):
