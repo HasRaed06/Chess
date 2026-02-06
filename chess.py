@@ -49,22 +49,22 @@ class ChessWindow(QMainWindow):
         self.main_board = new_board
         loadUi("chess.ui", self)
         #displaying the board in the UI
-        for btn in self.findChildren(QPushButton):
-            name = btn.objectName()
-            if not (len(name) == 3 and name.startswith("b")):
-                continue
-            row = int(name[1])
-            col = int(name[2])
-            btn.setProperty("piece", board[row][col])
-            image = self.main_board[row][col]["image"]
-            btn.setIcon(QIcon(image))
-            btn.setIconSize(QSize(86, 86))
-            btn.setProperty("board_pos", (row, col))
-            self.btn = btn
-            btn.clicked.connect(self.square_clicked)
-            square = self.theme[0] if (row+col)%2 == 0 else self.theme[1]
-            btn.setProperty("square_color", square)
-            btn.setStyleSheet(f"background-color: {square};")
+        for row in range(8):
+            for col in range(8):
+                btn = self.findChild(QPushButton, f"b{row}{col}")
+                name = btn.objectName()
+                if not (len(name) == 3 and name.startswith("b")):
+                    continue
+                btn.setProperty("piece", board[row][col])
+                image = self.main_board[row][col]["image"]
+                btn.setIcon(QIcon(image))
+                btn.setIconSize(QSize(86, 86))
+                btn.setProperty("board_pos", (row, col))
+                self.btn = btn
+                btn.clicked.connect(self.square_clicked)
+                square = self.theme[0] if (row+col)%2 == 0 else self.theme[1]
+                btn.setProperty("square_color", square)
+                btn.setStyleSheet(f"background-color: {square};")
 
     #translate a piece postion in the board into chess code
     def to_chess(self, row, col):
@@ -82,9 +82,11 @@ class ChessWindow(QMainWindow):
 
     #checks if theres highlited square(you selected a piece)
     def highlighted(self):
-        for btn in self.findChildren(QPushButton):
-            if btn.property("square_color") == self.theme[2]:
-                return True
+        for row in range(8):
+            for col in range(8):
+                btn = self.findChild(QPushButton, f"b{row}{col}")
+                if btn.property("square_color") == self.theme[2]:
+                    return True
         return False
     
     #highlightes the moves of a piece
@@ -97,12 +99,15 @@ class ChessWindow(QMainWindow):
        
     #remove the highlighted squares
     def dehighlight(self):
-        for btn in self.findChildren(QPushButton):
-            row,col = btn.property("board_pos")
-            square = self.theme[0] if (row+col)%2 == 0 else self.theme[1]
-            btn.setProperty("square_color",square)
-            btn.setStyleSheet(f"background-color: {square};")
-    
+        for row in range(8):
+            for col in range(8):
+                btn = self.findChild(QPushButton, f"b{row}{col}")
+                square = self.theme[0] if (row+col)%2 == 0 else self.theme[1]
+                btn.setProperty("square_color",square)
+                btn.setStyleSheet(f"background-color: {square};")
+
+
+                
     def print(self, board):
         for i in range(8):
             ch = ''
@@ -151,12 +156,14 @@ ini_board = [
     ["wrq", "wnq", "wbq", "wq", "wk", "wbk", "wnk", "wrk"]
 ]
 
-
+def reset():
+    window = ChessWindow(ini_board)
 
 def main():
     app = QApplication(sys.argv)
     window = ChessWindow(ini_board)
     window.show()
+    window.reset.clicked.connect(reset)
     sys.exit(app.exec())
 
 
