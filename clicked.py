@@ -96,6 +96,7 @@ def square_clicked(self):
             self.highlight(row,col)
     self.prv_btn = btn
 
+#simple print of board with properties
 def test(self):
     for i in range(8):
         ch = ''

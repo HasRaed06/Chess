@@ -78,6 +78,7 @@ class ChessWindow(QMainWindow):
     def reset_game(self):
         self.initialize(ini_board)
         self.display(ini_board)
+        self.print(self.main_board)
 
     #translate a piece postion in the board into chess code
     def to_chess(self, row, col):
@@ -120,7 +121,7 @@ class ChessWindow(QMainWindow):
                 btn.setStyleSheet(f"background-color: {square};")
 
 
-                
+    #print of the main_board(dictionaries)       
     def print(self, board):
         for i in range(8):
             ch = ''
