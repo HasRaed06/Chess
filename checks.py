@@ -57,7 +57,7 @@ def check(self,board,color):
             c = col + cc*i
         if 0<=r<8 and 0<=c<8:
             piece = board[r][c]
-            if (piece['type'] == 'queen' or piece['type'] == 'rook') and piece['color'] != color:
+            if (piece['type'] == 'queen' or piece['type'] == 'rook') and piece['color'] != color or (piece['type'] == 'king' and i == 1):
                 return True
     #check for straight lines
     for dir in direction2:
@@ -71,7 +71,7 @@ def check(self,board,color):
             c = col + cc*i
         if 0<=r<8 and 0<=c<8:
             piece = board[r][c]
-            if (piece['type'] == 'queen' or piece['type'] == 'bishop') and piece['color'] != color:
+            if (piece['type'] == 'queen' or piece['type'] == 'bishop') and piece['color'] != color or (piece['type'] == 'king' and i == 1):
                 return True
     #check for knight
     for dir in direction3:
@@ -127,7 +127,7 @@ def attackers(self,board,color):
         (2,-1),
         (2,1)
     ]
-    #check diagnals
+    #check for straight lines
     for dir in direction1:
         rr,cc = dir
         i = 1
@@ -141,7 +141,7 @@ def attackers(self,board,color):
             piece = board[r][c]
             if (piece['type'] == 'queen' or piece['type'] == 'rook') and piece['color'] != color:
                 att.append((r,c))
-    #check for straight lines
+    #check for diagnals
     for dir in direction2:
         rr,cc = dir
         i = 1
