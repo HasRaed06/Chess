@@ -2,7 +2,6 @@ import checks
 #evaluates all the possible moves of a piece (position of the piece)
 def moves(self, board, piece_pos):
     #promotion
-    #valid moves(after checks)
     possible_moves = []
     row, col = piece_pos
     if board[row][col] == "":
@@ -179,9 +178,12 @@ def moves(self, board, piece_pos):
                 if row_opp == row+coff and (col_opp == col+1 or col_opp == col-1):
                     possible_moves.append((row_opp,col_opp))
                 elif self.last_move:
-                    r,c = self.last_move[1].property("board_pos")
-                    if self.last_move[1].property("enpassant") and row_opp == row and (col_opp == col+1 or col_opp == col-1):
-                        possible_moves.append((row+coff,col_opp))
+                    r,c = self.last_move
+                    try:
+                        if board[r][c]['enpassant'] and row_opp == row and (col_opp == col+1 or col_opp == col-1):
+                            possible_moves.append((row+coff,col_opp))
+                    except:
+                        pass
             else:
                 for dir in direction:
                     rr,cc = dir
