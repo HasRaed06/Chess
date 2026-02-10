@@ -1,9 +1,4 @@
-from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton
-from PyQt6.uic import loadUi
-from PyQt6.QtGui import QIcon
-from PyQt6.QtCore import QSize
 from calc_moves import moves
-
 #this works when you press on any square
 def square_clicked(self,pos):
     row,col = pos
@@ -92,17 +87,3 @@ def square_clicked(self,pos):
             self.possible_moves = moves(self, board, pos)
             self.highlight(self.possible_moves)
     self.prv_pos = pos
-
-#simple print of board with properties
-def test(self):
-    for i in range(8):
-        ch = ''
-        for j in range(8):
-            btn = self.findChild(QPushButton, 'b'+str(i)+str(j))
-            x = btn.property("piece")
-            if not x:
-                x = '   '
-            elif len(x) == 2:
-                x += ' '
-            ch += " " + x + " |"
-        print(ch)

@@ -166,6 +166,20 @@ class ChessWindow(QMainWindow):
     #evaluates all the possible moves of a piece (position of the piece)
     def moves(self, board, piece_pos):
         return calc_moves.moves(self, board, piece_pos)
+    
+    #simple print of board with properties
+    def test(self):
+        for i in range(8):
+            ch = ''
+            for j in range(8):
+                btn = self.findChild(QPushButton, 'b'+str(i)+str(j))
+                x = btn.property("piece")
+                if not x:
+                    x = '   '
+                elif len(x) == 2:
+                    x += ' '
+                ch += " " + x + " |"
+            print(ch)
 
 
 

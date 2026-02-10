@@ -1,8 +1,3 @@
-from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton
-from PyQt6.uic import loadUi
-from PyQt6.QtGui import QIcon
-from PyQt6.QtCore import QSize
-
 #checks if the color's king is on check or not
 def check(self,board,color):
     for i in range(8):
