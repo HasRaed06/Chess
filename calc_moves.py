@@ -64,9 +64,15 @@ def moves(self, board, piece_pos):
                     possible_moves.append((row+coff, col-1))
             #en passant
             if self.last_move:
-                r,c = self.last_move[1].property("board_pos")
-                if self.last_move[1].property("enpassant") and row == r and abs(col-c) == 1 and self.check(self.result(board,(row,col),(row+coff,c)),color) == False:
-                    possible_moves.append((row+coff,c))
+                r,c = self.last_move
+                try:
+                    if board[r][c]['enpassant']:
+
+                        if row == r and abs(col-c) == 1 and self.check(self.result(board,(row,col),(row+coff,c)),color) == False:
+                            possible_moves.append((row+coff,c))
+                except:
+                    pass 
+                
 
         if type != "pawn":
             for dir in direction:

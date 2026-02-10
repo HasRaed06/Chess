@@ -2,99 +2,96 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton
 from PyQt6.uic import loadUi
 from PyQt6.QtGui import QIcon
 from PyQt6.QtCore import QSize
+from calc_moves import moves
 
 #this works when you press on any square
-def square_clicked(self):
-    btn = self.sender()
-    row, col = btn.property("board_pos")
+def square_clicked(self,pos):
+    row,col = pos
     board = self.main_board
     turn = self.turn()
-    if self.highlighted():
-        if btn.property("square_color") != self.theme[2]:
+    if self.possible_moves:
+        if pos not in self.possible_moves:
             self.dehighlight()
+            self.possible_moves = []
             if board[row][col]['type'] != "" and turn == board[row][col]['color']:
-                self.highlight(row,col)
+                self.possible_moves = moves(self, board, pos)
+                self.highlight(self.possible_moves)
+
         else:
-            name = self.prv_btn.property("piece")
-            if name == "bk":
-                self.bking_moved = True
-            elif name == "wk":
-                self.wking_moved = True
-            elif name == "brq":
-                self.brq_moved = True
-            elif name == "brk":
-                self.brk_moved = True 
-            elif name == "wrq":
-                self.wrq_moved = True 
-            elif name == "wrk":
-                self.wrk_moved = True
+            prv_row, prv_col = self.prv_pos
+            piece = board[prv_row][prv_col]
+            if piece['type'] == 'king':
+                if piece['color'] == 'black':
+                    self.bking_moved = True
+                else:
+                    self.wking_moved = True
+            elif piece['type'] == "rook":
+                if piece['color'] == 'black':
+                    if prv_col == 0:
+                        self.brq_moved = True
+                    elif prv_col == 7:
+                        self.brk_moved = True
+                else:
+                    if prv_col == 0:
+                        self.wrq_moved = True
+                    elif prv_col == 7:
+                        self.wrk_moved = True
             
             #en passant
-            r,c = self.prv_btn.property("board_pos")
-            btn.setProperty("piece", name)
-            if board[r][c]['type'] == 'pawn' and col != c and board[row][col]['type'] == '':
-                if board[r][c]['color'] == 'black':
+            if board[prv_row][prv_col]['type'] == 'pawn' and col != prv_col and board[row][col]['type'] == '':
+                if board[prv_row][prv_col]['color'] == 'black':
                     coff = 1
                 else:
                     coff = -1
 
                 board[row-coff][col] = {'type': '', 'color': '', 'image': ''}
-                btn2 = self.findChild(QPushButton, "b"+str(row-coff)+str(col))
-                btn2.setIcon(QIcon(""))
-                btn2.setProperty("piece","")
-            board[row][col] = board[r][c]
-            board[r][c] = {'type': '', 'color': '', 'image': ''}
-            image = board[row][col]["image"]
-            btn.setIcon(QIcon(image))
-            btn.setIconSize(QSize(86, 86))
-            self.prv_btn.setProperty("piece","")
-            self.prv_btn.setIcon(QIcon(""))
-            self.dehighlight()
+                self.edit("",(row-coff,col))
+            board[row][col] = board[prv_row][prv_col]
+            board[prv_row][prv_col] = {'type': '', 'color': '', 'image': ''}
+            image = board[row][col]['image']
+            self.edit(image,(row,col))
+            self.edit("",(prv_row,prv_col))
             #castling
             if board[row][col]['type'] == 'king':
-                if col - c == 2:
-                    btn2 = self.findChild(QPushButton, "b"+str(row)+str(col-1))
-                    btn3 = self.findChild(QPushButton, "b"+str(row)+str(col+1))
+                if col - prv_col == 2:
                     board[row][col-1] = board[row][col+1]
                     board[row][col+1] = {'type': '', 'color': '', 'image': ''}
                     image = board[row][col-1]["image"]
-                    btn2.setIcon(QIcon(image))
-                    btn2.setIconSize(QSize(86, 86))
-                    btn3.setIcon(QIcon(""))
-                    btn2.setProperty("piece",btn3.property("piece"))
-                    btn3.setProperty("piece", "")
+                    self.edit(image,(row,col-1))
+                    self.edit("",(row,col+1))
 
-                elif col - c == -2:
-                    btn2 = self.findChild(QPushButton, "b"+str(row)+str(col+1))
-                    btn3 = self.findChild(QPushButton, "b"+str(row)+str(col-2))
+                elif col - prv_col == -2:
                     board[row][col+1] = board[row][col-2]
                     board[row][col-2] = {'type': '', 'color': '', 'image': ''}
                     image = board[row][col+1]["image"]
-                    btn2.setIcon(QIcon(image))
-                    btn2.setIconSize(QSize(86, 86))
-                    btn3.setIcon(QIcon(""))
-                    btn2.setProperty("piece",btn3.property("piece"))
-                    btn3.setProperty("piece", "")
+                    self.edit(image,(row,col+1))
+                    self.edit("",(row,col-2))
 
-            if board[row][col]['type'] == 'pawn' and abs(row-r) == 2:
-                btn.setProperty("enpassant", True)
+
+            if board[row][col]['type'] == 'pawn' and abs(row-prv_row) == 2:
+                board[row][col]['enpassant'] = True
             if self.last_move:
-                if self.last_move[1].property("enpassant") == True :
-                    self.last_move[1].setProperty("enpassant",None)
+                r,c = self.last_move
+                try:
+                    if board[r][c]['enpassant']:
+                        board[r][c]['enpassant'] = False
+                except:
+                    pass
 
             #promotion
             if (row == 0 or row == 7) and board[row][col]['type'] == 'pawn':
                 self.main_board[row][col] = {'type': 'queen', 'color': board[row][col]['color'], 'image': 'images/'+board[row][col]['color']+'queen.jpg'}
                 image = self.main_board[row][col]["image"]
-                btn.setIcon(QIcon(image))
-                btn.setIconSize(QSize(86, 86))
-                btn.setProperty("piece", board[row][col]['color'][0]+"q")
-            self.last_move = (self.prv_btn,btn)
+                self.edit(image,(row,col))
+            self.last_move = pos
+            self.dehighlight()
+            self.possible_moves = []
     else:
         #highlight a piece
         if board[row][col]['type'] != "" and turn == board[row][col]['color']:
-            self.highlight(row,col)
-    self.prv_btn = btn
+            self.possible_moves = moves(self, board, pos)
+            self.highlight(self.possible_moves)
+    self.prv_pos = pos
 
 #simple print of board with properties
 def test(self):

@@ -18,7 +18,8 @@ class ChessWindow(QMainWindow):
         self.display(board)
     
     def initialize(self,board):
-        self.prv_btn = None
+        self.prv_pos = None
+        self.possible_moves = []
         self.last_move = None
         self.wking_moved = False
         self.bking_moved = False
@@ -102,9 +103,14 @@ class ChessWindow(QMainWindow):
                     return True
         return False
     
+    def edit(self,image,pos):
+        row, col = pos
+        btn = self.findChild(QPushButton,f"b{row}{col}")
+        btn.setIcon(QIcon(image))
+        btn.setIconSize(QSize(86, 86))
+
     #highlightes the moves of a piece
-    def highlight(self,row,col):
-        list = (self.moves(self.main_board, (row,col) ))
+    def highlight(self,list):
         for row,col in list:
                 btn = self.findChild(QPushButton, f"b{row}{col}")
                 btn.setProperty("square_color",self.theme[2])
@@ -131,17 +137,22 @@ class ChessWindow(QMainWindow):
                     c = board[i][j]["type"][:4]
                 ch = ch + " " + c + " |"
             print(ch)
+    
+    #remove the piece from the UI
+    def remove(pos):
+        pass
 
     #this works when you press on any square
     def square_clicked(self):
-        clicked.square_clicked(self)
+        btn = self.sender()
+        clicked.square_clicked(self,btn.property("board_pos"))
     
     def turn(self):
         if self.last_move:
-            color = self.last_move[1].property("piece")[0]
+            row, col = self.last_move
+            return 'black' if self.main_board[row][col]["color"] == 'white' else 'white'
         else:
             return "white"
-        return "black" if color == "w" else "white"
     
     #checks if the color's king is on check or not
     def check(self,board,color):
